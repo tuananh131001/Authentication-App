@@ -1,34 +1,17 @@
 import React from "react";
-import axios from "axios";
-import { MdEmail, MdLock } from "react-icons/md";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FaGoogle, FaFacebook, FaTwitter, FaGithub } from "react-icons/fa";
 import Form from "../Components/Form";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase-config";
-import { UserContext } from "../utils/UserContext";
-
-
-function Login() {
-  const { setUser } = React.useContext(UserContext);
-  onAuthStateChanged(auth, (currentUser) => {
-    setUser(currentUser);
-  });
-
+import {auth} from '../firebase-config'
+function Register() {
   const { register, handleSubmit } = useForm();
-  const navigate = useNavigate();
+
   const onSubmit = async (data) => {
-    try {
-      const user = await signInWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
-      
-      user ? navigate("/account") : console.log("Wrong account");
+    try{ 
+      const user = await createUserWithEmailAndPassword(auth,data.email,data.password) 
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message)
     }
   };
   return (
@@ -109,12 +92,15 @@ function Login() {
           </svg>
         </header>
         <main className="flex flex-col gap-8">
-          <h1 className="font-semibold text-xl">Login</h1>
-          <Form
-            register={register}
-            onSubmit={onSubmit}
-            handleSubmit={handleSubmit}
-          />
+          <h1 className="font-semibold text-xl">
+            Join thousands of learners from around the world
+          </h1>
+          <p>
+            Master web development by making real-life projects. There are
+            multiple paths for you to choose
+          </p>
+          <Form register={register} onSubmit={onSubmit}  handleSubmit={handleSubmit}/>
+
           <p className="text-gray-400 font-light text-center text-sm">
             or continue with these social profile
           </p>
@@ -133,10 +119,10 @@ function Login() {
             </figure>
           </figure>
           <p className="text-gray-400 font-light text-center text-sm">
-            Don't have an account yet?
-            <a href="/register" className="text-blue-500">
+            Adready a member?
+            <a href="/" className="text-blue-500">
               {" "}
-              Register
+              Login
             </a>{" "}
           </p>
         </main>
@@ -148,4 +134,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;

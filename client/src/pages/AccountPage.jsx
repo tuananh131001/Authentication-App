@@ -1,40 +1,16 @@
-import React from "react";
-import axios from "axios";
-import { MdEmail, MdLock } from "react-icons/md";
-import { FaGoogle, FaFacebook, FaTwitter, FaGithub } from "react-icons/fa";
-import Form from "../Components/Form";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import React, { useRef, useState } from "react";
+import DropdownButton from "../Components/DropdownButton";
+import PersonalInfo from "../Components/PersonalInfo";
+import UserForm from "../Components/UserForm";
 import { auth } from "../firebase-config";
-import { UserContext } from "../utils/UserContext";
 
-
-function Login() {
-  const { setUser } = React.useContext(UserContext);
-  onAuthStateChanged(auth, (currentUser) => {
-    setUser(currentUser);
-  });
-
-  const { register, handleSubmit } = useForm();
-  const navigate = useNavigate();
-  const onSubmit = async (data) => {
-    try {
-      const user = await signInWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
-      
-      user ? navigate("/account") : console.log("Wrong account");
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+function AccountPage() {
+  const wrapperRef = useRef(null);
+  const [isEdit, setIsEdit] = useState(false);
   return (
-    <>
-      <body className=" flex-col flex gap-5 justify-between h-screen p-5">
-        <header className="flex items-center">
+    <div ref={wrapperRef}>
+      <body className=" flex-col flex gap-5 bg-slate-100">
+        <header className="fixed flex w-full p-5 items-center justify-between">
           <svg
             width="131"
             height="19"
@@ -107,45 +83,19 @@ function Login() {
               fill="#C73622"
             />
           </svg>
+
+          <DropdownButton AccountPageRef={wrapperRef} auth={auth} />
         </header>
-        <main className="flex flex-col gap-8">
-          <h1 className="font-semibold text-xl">Login</h1>
-          <Form
-            register={register}
-            onSubmit={onSubmit}
-            handleSubmit={handleSubmit}
-          />
-          <p className="text-gray-400 font-light text-center text-sm">
-            or continue with these social profile
-          </p>
-          <figure className="flex items-center justify-center gap-4 ">
-            <figure className="rounded-full border border-gray-400 p-2  ">
-              <FaGoogle className="text-gray-500 "></FaGoogle>
-            </figure>
-            <figure className="rounded-full border border-gray-400 p-2  ">
-              <FaFacebook className="text-gray-500 "></FaFacebook>
-            </figure>
-            <figure className="rounded-full border border-gray-400 p-2  ">
-              <FaTwitter className="text-gray-500 "></FaTwitter>
-            </figure>
-            <figure className="rounded-full border border-gray-400 p-2  ">
-              <FaGithub className="text-gray-500 "></FaGithub>
-            </figure>
-          </figure>
-          <p className="text-gray-400 font-light text-center text-sm">
-            Don't have an account yet?
-            <a href="/register" className="text-blue-500">
-              {" "}
-              Register
-            </a>{" "}
-          </p>
+        <main className="flex flex-col h-screen p-5 ">
+          {isEdit ? (
+            <UserForm />
+          ) : (
+            <PersonalInfo setIsEdit={setIsEdit}></PersonalInfo>
+          )}
         </main>
-        <footer className=" font-thin text-gray-400 text-center text-sm flex justify-between ">
-          <p>Your name</p> <p>devchallenges.io</p>
-        </footer>
       </body>
-    </>
+    </div>
   );
 }
 
-export default Login;
+export default AccountPage;
