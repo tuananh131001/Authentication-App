@@ -1,15 +1,15 @@
 import React from "react";
 import { MdAccountCircle, MdPeople, MdOutlineExitToApp } from "react-icons/md";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase-config";
 
 function Menu() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const signOutFunc = async () => {
     await signOut(auth);
-    navigate('/')
+    navigate("/");
   };
   return (
     <section className=" rounded-md shadow-sm absolute flex flex-col gap-5 p-4 right-5 top-12 border-2 bg-white">

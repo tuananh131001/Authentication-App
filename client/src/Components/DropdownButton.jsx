@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useContext } from "react";
+import { UserContext } from "../utils/UserContext";
 import Menu from "./Menu";
-
 function DropdownButton({ AccountPageRef }) {
   const [dropDown, setDropDown] = useState(false);
+  const {  userDetail } =
+    useContext(UserContext);
   const buttonRef = useRef();
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -23,8 +26,9 @@ function DropdownButton({ AccountPageRef }) {
       <button
         onClick={(x) => (!dropDown ? setDropDown(true) : setDropDown(false))}
       >
-        IMAGE
+        <img className="w-10" src={userDetail.image} alt=""  />
       </button>
+      
       {dropDown ? <Menu></Menu> : null}
     </div>
   );

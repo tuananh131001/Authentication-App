@@ -1,16 +1,28 @@
 import React, { useRef, useState } from "react";
 import DropdownButton from "../Components/DropdownButton";
 import PersonalInfo from "../Components/PersonalInfo";
-import UserForm from "../Components/UserForm";
-import { auth } from "../firebase-config";
-
+import EditForm from "../Components/EditForm";
+import { auth, db } from "../firebase-config";
+import { useEffect } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { useContext } from "react";
+import { UserContext } from "../utils/UserContext";
 function AccountPage() {
   const wrapperRef = useRef(null);
   const [isEdit, setIsEdit] = useState(false);
+  const { currentUserAuth, setCurrentUserAuth, setUserDetail } =
+    useContext(UserContext);
+  useEffect(() => {
+    const getUsers = async () => {
+      const user = await getDoc(doc(db, "users", currentUserAuth.uid));
+      setUserDetail(user.data());
+    };
+    currentUserAuth ? getUsers() : null;
+  }, [currentUserAuth]);
   return (
-    <div ref={wrapperRef}>
-      <body className=" flex-col flex gap-5 bg-slate-100">
-        <header className="fixed flex w-full p-5 items-center justify-between">
+    <section ref={wrapperRef}>
+      <div className=" flex-col flex gap-5 bg-slate-100 items-center">
+        <header className=" flex w-full p-5 items-center justify-between">
           <svg
             width="131"
             height="19"
@@ -86,15 +98,15 @@ function AccountPage() {
 
           <DropdownButton AccountPageRef={wrapperRef} auth={auth} />
         </header>
-        <main className="flex flex-col h-screen p-5 ">
+        <main className="flex flex-col h-screen w-10/12 ">
           {isEdit ? (
-            <UserForm />
+            <EditForm setIsEdit={setIsEdit} />
           ) : (
-            <PersonalInfo setIsEdit={setIsEdit}></PersonalInfo>
+            <PersonalInfo  setIsEdit={setIsEdit}></PersonalInfo>
           )}
         </main>
-      </body>
-    </div>
+      </div>
+    </section>
   );
 }
 

@@ -3,15 +3,30 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FaGoogle, FaFacebook, FaTwitter, FaGithub } from "react-icons/fa";
 import Form from "../Components/Form";
 import { useForm } from "react-hook-form";
-import {auth} from '../firebase-config'
+import { auth, db } from "../firebase-config";
+import { doc, setDoc } from "firebase/firestore";
+import { useNavigate } from "react-router";
 function Register() {
   const { register, handleSubmit } = useForm();
-
+  const navigate = useNavigate()
   const onSubmit = async (data) => {
-    try{ 
-      const user = await createUserWithEmailAndPassword(auth,data.email,data.password) 
+    try {
+      const user = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      ).then((cred) => {
+        return setDoc(doc(db, "users", cred.user.uid), {
+          name: "Sir",
+          bio: "",
+          photo: "",
+          email: data.email,
+          password: data.password,
+          image: "https://www.w3schools.com/howto/img_avatar.png"
+        }).then(() => navigate("/account"));
+      });
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message);
     }
   };
   return (
@@ -99,7 +114,12 @@ function Register() {
             Master web development by making real-life projects. There are
             multiple paths for you to choose
           </p>
-          <Form register={register} onSubmit={onSubmit}  handleSubmit={handleSubmit}/>
+          <Form
+            register={register}
+            onSubmit={onSubmit}
+            handleSubmit={handleSubmit}
+            type={"Register"}
+          />
 
           <p className="text-gray-400 font-light text-center text-sm">
             or continue with these social profile

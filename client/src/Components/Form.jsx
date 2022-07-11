@@ -1,7 +1,7 @@
 import React from "react";
 import { MdEmail, MdLock } from "react-icons/md";
 
-function Form({ register, handleSubmit, onSubmit }) {
+function Form({ register, handleSubmit, onSubmit ,type}) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <div className="flex items-center gap-2 p-2 border border-gray-400 rounded-md">
@@ -25,7 +25,7 @@ function Form({ register, handleSubmit, onSubmit }) {
       </div>
 
       <button className=" bg-blue-500 text-white py-1 px-2 rounded-md">
-        Login
+        {type}
       </button>
     </form>
   );

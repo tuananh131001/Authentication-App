@@ -1,23 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { MdEmail, MdLock } from "react-icons/md";
 import { FaGoogle, FaFacebook, FaTwitter, FaGithub } from "react-icons/fa";
 import Form from "../Components/Form";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase-config";
+import { auth, db } from "../firebase-config";
 import { UserContext } from "../utils/UserContext";
-
-
+import { useContext } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { useEffect } from "react";
 function Login() {
-  const { setUser } = React.useContext(UserContext);
-  onAuthStateChanged(auth, (currentUser) => {
-    setUser(currentUser);
-  });
-
+  const { currentUserAuth, setCurrentUserAuth, setUserDetail } =
+    useContext(UserContext);
+  const [error, setError] = useState("");
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
+  useEffect(() => {
+    auth.currentUser ? navigate("/account") : null;
+  }, [auth.currentUser]);
   const onSubmit = async (data) => {
     try {
       const user = await signInWithEmailAndPassword(
@@ -25,10 +27,11 @@ function Login() {
         data.email,
         data.password
       );
-      
+
       user ? navigate("/account") : console.log("Wrong account");
-    } catch (error) {
-      console.log(error.message);
+    } catch (err) {
+      setError("Wrong account or password");
+      console.log(err.message);
     }
   };
   return (
@@ -108,12 +111,18 @@ function Login() {
             />
           </svg>
         </header>
-        <main className="flex flex-col gap-8">
-          <h1 className="font-semibold text-xl">Login</h1>
+        <main className="flex flex-col gap-8  items-center justify-center">
+          <h1 className="font-semibold text-xl text-left">Login</h1>
+          {error && (
+            <section className=" bg-red-500 text-white p-2 rounded-md ">
+              {error}
+            </section>
+          )}
           <Form
             register={register}
             onSubmit={onSubmit}
             handleSubmit={handleSubmit}
+            type={"Login"}
           />
           <p className="text-gray-400 font-light text-center text-sm">
             or continue with these social profile
@@ -134,10 +143,10 @@ function Login() {
           </figure>
           <p className="text-gray-400 font-light text-center text-sm">
             Don't have an account yet?
-            <a href="/register" className="text-blue-500">
+            <Link className="text-blue-500" to="/register">
               {" "}
               Register
-            </a>{" "}
+            </Link>
           </p>
         </main>
         <footer className=" font-thin text-gray-400 text-center text-sm flex justify-between ">
