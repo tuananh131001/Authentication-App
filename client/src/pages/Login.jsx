@@ -1,16 +1,15 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { MdEmail, MdLock } from "react-icons/md";
 import { FaGoogle, FaFacebook, FaTwitter, FaGithub } from "react-icons/fa";
 import Form from "../Components/Form";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../firebase-config";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, db, signInWithGoogle } from "../firebase-config";
 import { UserContext } from "../utils/UserContext";
 import { useContext } from "react";
-import { doc, getDoc } from "firebase/firestore";
 import { useEffect } from "react";
+import ProviderLogin from "../Components/ProviderLogin";
+import { motion } from "framer-motion";
 function Login() {
   const { currentUserAuth, setCurrentUserAuth, setUserDetail } =
     useContext(UserContext);
@@ -36,8 +35,18 @@ function Login() {
   };
   return (
     <>
-      <body className=" flex-col flex gap-5 justify-between h-screen p-5">
-        <header className="flex items-center">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: 1,
+          transition: {
+            duration: 0.3,
+          },
+        }}
+        exit={{ opacity: 0 }}
+        className=" lg:border rounded-lg flex-col flex gap-5 justify-center p-10"
+      >
+        <section className="flex items-center">
           <svg
             width="131"
             height="19"
@@ -110,49 +119,33 @@ function Login() {
               fill="#C73622"
             />
           </svg>
-        </header>
-        <main className="flex flex-col gap-8  items-center justify-center">
-          <h1 className="font-semibold text-xl text-left">Login</h1>
-          {error && (
-            <section className=" bg-red-500 text-white p-2 rounded-md ">
-              {error}
-            </section>
-          )}
-          <Form
-            register={register}
-            onSubmit={onSubmit}
-            handleSubmit={handleSubmit}
-            type={"Login"}
-          />
+        </section>
+        <h1 className="font-semibold text-xl text-left">Login</h1>
+        {error && (
+          <section className=" bg-red-500 text-white p-2 rounded-md ">
+            {error}
+          </section>
+        )}
+        <Form
+          register={register}
+          onSubmit={onSubmit}
+          handleSubmit={handleSubmit}
+          type={"Login"}
+        />
+        <section className="flex flex-col gap-6 justify-center items-center text-center w-full">
           <p className="text-gray-400 font-light text-center text-sm">
             or continue with these social profile
           </p>
-          <figure className="flex items-center justify-center gap-4 ">
-            <figure className="rounded-full border border-gray-400 p-2  ">
-              <FaGoogle className="text-gray-500 "></FaGoogle>
-            </figure>
-            <figure className="rounded-full border border-gray-400 p-2  ">
-              <FaFacebook className="text-gray-500 "></FaFacebook>
-            </figure>
-            <figure className="rounded-full border border-gray-400 p-2  ">
-              <FaTwitter className="text-gray-500 "></FaTwitter>
-            </figure>
-            <figure className="rounded-full border border-gray-400 p-2  ">
-              <FaGithub className="text-gray-500 "></FaGithub>
-            </figure>
-          </figure>
-          <p className="text-gray-400 font-light text-center text-sm">
+          <ProviderLogin />
+          <p className="text-gray-400 font-light text-center text-sm ">
             Don't have an account yet?
             <Link className="text-blue-500" to="/register">
               {" "}
               Register
             </Link>
           </p>
-        </main>
-        <footer className=" font-thin text-gray-400 text-center text-sm flex justify-between ">
-          <p>Your name</p> <p>devchallenges.io</p>
-        </footer>
-      </body>
+        </section>
+      </motion.div>
     </>
   );
 }

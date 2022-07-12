@@ -1,48 +1,43 @@
 import { doc, getDoc } from "firebase/firestore";
 import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { UserContext } from "../utils/UserContext";
+import InfoElement from "./InfoElement";
 function PersonalInfo({ setIsEdit }) {
-  const { userDetail } =
-    useContext(UserContext);
-
+  const { userDetail } = useContext(UserContext);
+  const navigate = useNavigate()
   return (
-    <div>
-      <h1 className="text-2xl text-center py-2">Personal Info</h1>
+    <div className="flex flex-col gap-4 items-center">
+      <h1 className="text-3xl text-center">Personal Info</h1>
       <h2 className="text-center text-sm font-thin">
         Basic info, like your name and photo
       </h2>
-      <section className="flex justify-between items-center py-8">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-2xl">Profile</h1>
-          <p className=" text-xs w-36 font-light text-gray-600">
-            Some info may be visible to other people
-          </p>
-        </div>
-        <button
-          onClick={(x) => setIsEdit(true)}
-          className="border-2 rounded-xl border-gray-300 p-5 h-5 flex items-center "
-        >
-          Edit
-        </button>
-      </section>
-      <div className="flex items-center  border-b py-8 justify-between text-gray-300">
-        <h1>PHOTO</h1>
-        <img className="w-10" src={userDetail?.image} alt="" />
-      </div>
-      <div className="flex items-center  border-b py-8 justify-between ">
-        <h1 className="text-gray-300">NAME:</h1>
-        <h1>{userDetail?.name}</h1>
-      </div>
-      <div className="flex items-center  border-b py-8 justify-between ">
-        <h1 className="text-gray-300">BIO</h1>
-        <h1>{userDetail?.bio}</h1>
-      </div>
-      <div className="flex items-center  border-b py-8 justify-between ">
-        <h1 className="text-gray-300">EMAIL</h1>
-        <h1>{userDetail?.email}</h1>
-      </div>
+      <section className="flex flex-col justify-between border rounded-md sm:w-8/12  ">
+        <section className="flex items-center justify-between border-b px-10 py-4 ">
+          <div className="flex flex-col gap-2 ">
+            <h1 className="text-2xl">Profile</h1>
+            <p className=" text-xs w-36 lg:w-full font-light text-gray-600">
+              Some info may be visible to other people
+            </p>
+          </div>
+          <button
+            onClick={(x) => navigate("/edit")}
+            className="border-2 rounded-xl border-gray-300 p-5 h-5 flex items-center "
+          >
+            {" "}
+            Edit
+          </button>
+        </section>
+        <InfoElement name={"Photo"} valueElement={userDetail?.image}/>
 
+        <InfoElement name={"Name"} valueElement={userDetail?.name}/>
+        <InfoElement name={"Bio"} valueElement={userDetail?.bio}/>
+        <InfoElement name={"Phone"} valueElement={userDetail?.phone}/>
+        <InfoElement name={"Email"} valueElement={userDetail?.email}/>
+        <InfoElement name={"Password"} valueElement={"*******"} border={false}/>
+
+      </section>
     </div>
   );
 }

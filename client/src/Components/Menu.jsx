@@ -12,7 +12,7 @@ function Menu() {
     navigate("/");
   };
   return (
-    <section className=" rounded-md shadow-sm absolute flex flex-col gap-5 p-4 right-5 top-12 border-2 bg-white">
+    <section className=" rounded-md shadow-sm absolute flex flex-col gap-5 p-4 right-5 top-16 border-2 bg-white">
       <section className="p-2 flex gap-2 items-center hover:bg-slate-200 hover:rounded-lg">
         <MdAccountCircle className="text-xl"></MdAccountCircle>
         <a href="">My Profile</a>

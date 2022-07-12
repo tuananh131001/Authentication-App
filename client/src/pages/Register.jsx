@@ -6,9 +6,12 @@ import { useForm } from "react-hook-form";
 import { auth, db } from "../firebase-config";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router";
+import ProviderLogin from "../Components/ProviderLogin";
+import { useState } from "react";
 function Register() {
   const { register, handleSubmit } = useForm();
-  const navigate = useNavigate()
+  const [error,setError] = useState()
+  const navigate = useNavigate();
   const onSubmit = async (data) => {
     try {
       const user = await createUserWithEmailAndPassword(
@@ -18,20 +21,20 @@ function Register() {
       ).then((cred) => {
         return setDoc(doc(db, "users", cred.user.uid), {
           name: "Sir",
-          bio: "",
-          photo: "",
+          bio: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iusto quidem voluptatum dolore reiciendis maiores repudiandae possimus harum placeat architecto repellendus? Culpa porro iure quam dolore eius mollitia harum sit perferendis?",
+          phone: "129321031283",
           email: data.email,
           password: data.password,
-          image: "https://www.w3schools.com/howto/img_avatar.png"
+          image: "https://www.w3schools.com/howto/img_avatar.png",
         }).then(() => navigate("/account"));
       });
     } catch (error) {
-      console.log(error.message);
+      setError(error.message);
     }
   };
   return (
     <>
-      <body className=" flex-col flex gap-5 justify-between h-screen p-5">
+      <main className="lg:border rounded-lg lg:w-4/12 flex-col flex gap-5  p-14">
         <header className="flex items-center">
           <svg
             width="131"
@@ -106,7 +109,7 @@ function Register() {
             />
           </svg>
         </header>
-        <main className="flex flex-col gap-8">
+        <section className="flex flex-col gap-8">
           <h1 className="font-semibold text-xl">
             Join thousands of learners from around the world
           </h1>
@@ -114,30 +117,22 @@ function Register() {
             Master web development by making real-life projects. There are
             multiple paths for you to choose
           </p>
+          {error && (
+            <section className=" bg-red-500 text-white p-2 rounded-md ">
+              {error}
+            </section>
+          )}
           <Form
             register={register}
             onSubmit={onSubmit}
             handleSubmit={handleSubmit}
-            type={"Register"}
+            type={"Start  Coding now"}
           />
 
           <p className="text-gray-400 font-light text-center text-sm">
             or continue with these social profile
           </p>
-          <figure className="flex items-center justify-center gap-4 ">
-            <figure className="rounded-full border border-gray-400 p-2  ">
-              <FaGoogle className="text-gray-500 "></FaGoogle>
-            </figure>
-            <figure className="rounded-full border border-gray-400 p-2  ">
-              <FaFacebook className="text-gray-500 "></FaFacebook>
-            </figure>
-            <figure className="rounded-full border border-gray-400 p-2  ">
-              <FaTwitter className="text-gray-500 "></FaTwitter>
-            </figure>
-            <figure className="rounded-full border border-gray-400 p-2  ">
-              <FaGithub className="text-gray-500 "></FaGithub>
-            </figure>
-          </figure>
+          <ProviderLogin />
           <p className="text-gray-400 font-light text-center text-sm">
             Adready a member?
             <a href="/" className="text-blue-500">
@@ -145,11 +140,8 @@ function Register() {
               Login
             </a>{" "}
           </p>
-        </main>
-        <footer className=" font-thin text-gray-400 text-center text-sm flex justify-between ">
-          <p>Your name</p> <p>devchallenges.io</p>
-        </footer>
-      </body>
+        </section>
+      </main>
     </>
   );
 }
