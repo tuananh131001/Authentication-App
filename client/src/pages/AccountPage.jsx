@@ -20,7 +20,7 @@ function AccountPage() {
       setUserDetail(user.data());
     };
     currentUserAuth ? getUsers() : null;
-  }, []);
+  }, [currentUserAuth]);
   return (
     <motion.div
       initial={{ opacity: 0 }}

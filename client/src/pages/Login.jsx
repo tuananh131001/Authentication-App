@@ -19,14 +19,14 @@ function Login() {
   const navigate = useNavigate();
   const setUsers = async () => {
     if (
-      auth &&
-      auth.metadata.creationTime === auth.metadata.lastSignInTime
+      auth.currentUser &&
+      auth.currentUser.metadata.creationTime === auth.currentUser.metadata.lastSignInTime
     ) {
-      await setDoc(doc(db, "users", auth.uid), {
-        name: auth.displayName,
+      await setDoc(doc(db, "users", auth.currentUser.uid), {
+        name: auth.currentUser.displayName,
         bio: "Hello mate , I am a example user",
         phone: "0123456789",
-        email: auth.email,
+        email: auth.currentUser.email,
         image: "https://www.w3schools.com/howto/img_avatar.png",
       });
     }
