@@ -3,9 +3,11 @@ import { initializeApp } from "firebase/app";
 import {
   FacebookAuthProvider,
   getAuth,
+  getRedirectResult,
   GithubAuthProvider,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
   TwitterAuthProvider,
 } from "firebase/auth";
 import { doc, getDoc, getFirestore, setDoc } from "@firebase/firestore";
@@ -35,67 +37,24 @@ const facebookProvider = new FacebookAuthProvider();
 const twitterProvider = new TwitterAuthProvider();
 
 export const signInWithGoogle = () => {
-  signInWithPopup(auth, GoogleProvider)
-    .then(async (result) => {
-      if (result._tokenResponse.isNewUser) {
-        await setDoc(doc(db, "users", result.user.uid), {
-          name: result.user.displayName,
-          bio: "",
-          email: result.user.email,
-          image: "https://www.w3schools.com/howto/img_avatar.png",
-        });
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  signInWithRedirect(auth, GoogleProvider).catch((error) => {
+    console.log(error);
+  });
+  
 };
 export const signInWithGithub = () => {
-  signInWithPopup(auth, githubProvider)
-    .then(async (result) => {
-      if (result._tokenResponse.isNewUser) {
-        await setDoc(doc(db, "users", result.user.uid), {
-          name: result.user.displayName,
-          bio: "",
-          email: result.user.email,
-          image: "https://www.w3schools.com/howto/img_avatar.png",
-        });
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  signInWithRedirect(auth, githubProvider).catch((error) => {
+    console.log(error);
+  });
 };
 export const signInWithFacebook = () => {
-  signInWithPopup(auth, facebookProvider)
-    .then(async (result) => {
-      if (result._tokenResponse.isNewUser) {
-        await setDoc(doc(db, "users", result.user.uid), {
-          name: result.user.displayName,
-          bio: "",
-          email: result.user.email,
-          image: "https://www.w3schools.com/howto/img_avatar.png",
-        });
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  signInWithRedirect(auth, facebookProvider).catch((error) => {
+    console.log(error);
+  });
 };
 export const signInWithTwitter = () => {
-  signInWithPopup(auth, signInWithTwitter)
-    .then(async (result) => {
-      if (result._tokenResponse.isNewUser) {
-        await setDoc(doc(db, "users", result.user.uid), {
-          name: result.user.displayName,
-          bio: "Lorem, ipsum dolor sarum sit perferendis?",
-          phone: "129321031283",
-          email: result.user.email,
-          image: "https://www.w3schools.com/howto/img_avatar.png",
-        });
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  signInWithRedirect(auth, twitterProvider).catch((error) => {
+    console.log(error);
+  });
 };
+

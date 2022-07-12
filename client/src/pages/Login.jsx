@@ -10,13 +10,31 @@ import { useContext } from "react";
 import { useEffect } from "react";
 import ProviderLogin from "../Components/ProviderLogin";
 import { motion } from "framer-motion";
+import { doc, setDoc } from "firebase/firestore";
 function Login() {
   const { currentUserAuth, setCurrentUserAuth, setUserDetail } =
     useContext(UserContext);
   const [error, setError] = useState("");
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
+  const setUsers = async () => {
+    if (
+      auth &&
+      auth.metadata.creationTime === auth.metadata.lastSignInTime
+    ) {
+      await setDoc(doc(db, "users", auth.uid), {
+        name: auth.displayName,
+        bio: "Hello mate , I am a example user",
+        phone: "0123456789",
+        email: auth.email,
+        image: "https://www.w3schools.com/howto/img_avatar.png",
+      });
+    }
+  };
+
   useEffect(() => {
+    auth.currentUser ? setUsers() :  null;
+
     auth.currentUser ? navigate("/account") : null;
   }, [auth.currentUser]);
   const onSubmit = async (data) => {

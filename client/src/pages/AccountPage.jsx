@@ -4,7 +4,7 @@ import PersonalInfo from "../Components/PersonalInfo";
 import EditForm from "../Components/EditForm";
 import { auth, db } from "../firebase-config";
 import { useEffect } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useContext } from "react";
 import { UserContext } from "../utils/UserContext";
 import { motion } from "framer-motion";
@@ -13,15 +13,22 @@ function AccountPage() {
   const [isEdit, setIsEdit] = useState(false);
   const { currentUserAuth, setCurrentUserAuth, setUserDetail } =
     useContext(UserContext);
+  
   useEffect(() => {
     const getUsers = async () => {
       const user = await getDoc(doc(db, "users", currentUserAuth.uid));
       setUserDetail(user.data());
     };
     currentUserAuth ? getUsers() : null;
-  }, [currentUserAuth]);
+  }, []);
   return (
-    <motion.div initial={{opacity:0}}  animate={{opacity:1}} exit={{opacity:0}} className="w-full flex flex-col items-center md:mt-20 lg:mt-16 mb-10 " ref={wrapperRef}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="w-full flex flex-col items-center md:mt-20 lg:mt-16 mb-10 "
+      ref={wrapperRef}
+    >
       <header className=" flex w-full p-5 items-center justify-between">
         <svg
           width="131"
